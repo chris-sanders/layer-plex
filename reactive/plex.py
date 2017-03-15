@@ -20,13 +20,23 @@ def install_plex():
     #  * https://jujucharms.com/docs/devel/developer-getting-started
     #  * https://github.com/juju-solutions/layer-basic#overview
 
+    filepath = './debs'
+    try:
+      os.mkdir(filepath)
+    except OSError as e:
+      if e.errno is 17:
+        pass
+
     # Parse the filename from the URL
     filename = config['download-url'].split('/')[-1]
+    
     # Download the deb
-    if not os.path.isfile(filename):
+    fullpath = os.path.join(filepath,filename)
+    if not os.path.isfile(fullpath):
     	status_set('maintenance','downloading plex')
-    	urllib.request.urlretrieve(config['download-url'],filename)
+    	urllib.request.urlretrieve(config['download-url'],fullpath)
     status_set('maintenance','installing plex')
-    apt_install('./{}'.format(filename))
+    apt_install(fullpath)
+    hookenv.open_port(32400,'TCP')
     status_set('active','')
     set_state('plex.installed')
