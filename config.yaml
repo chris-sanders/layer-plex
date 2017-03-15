@@ -3,6 +3,10 @@ options:
     type: string
     default: "https://downloads.plex.tv/plex-media-server/1.4.3.3433-03e4cfa35/plexmediaserver_1.4.3.3433-03e4cfa35_amd64.deb"
     description: "The URL to download plex from"
+  keep-debs:
+    type: int
+    default: 1
+    description: "Number of .deb packages to keep locally, set to 0 for none"
 #  boolean-option:
 #    type: boolean
 #    default: False

@@ -35,8 +35,14 @@ def install_plex():
     if not os.path.isfile(fullpath):
     	status_set('maintenance','downloading plex')
     	urllib.request.urlretrieve(config['download-url'],fullpath)
+
+    # Install package
     status_set('maintenance','installing plex')
     apt_install(fullpath)
+
+    # Clean up debs
+    # TODO check number of debs and clean up
+
     hookenv.open_port(32400,'TCP')
     status_set('active','')
     set_state('plex.installed')
