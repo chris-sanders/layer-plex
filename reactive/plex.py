@@ -8,6 +8,7 @@ import os
 
 @when_not('plex.installed')
 def install_plex():
+  # Create directory for debs
   config = hookenv.config()
   filepath = './debs'
   try:
