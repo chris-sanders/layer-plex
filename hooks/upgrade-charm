@@ -26,8 +26,4 @@ basic.init_config_states()
 # for more information on this pattern.
 from charms.reactive import main
 
-## The next two lines are a hack because @hook doesn't appear to work with upgrade-charm
-#from charms.reactive import remove_state
-#remove_state('plex.installed')
-
 main()
