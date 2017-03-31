@@ -45,3 +45,7 @@ def install_plex():
 def url_updated():
   install_plex()
 
+@when('plex.installed')
+@when_not('layer-mac.installed')
+def change_mac():
+    set_state('layer-mac.ready')
