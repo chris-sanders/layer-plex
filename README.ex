@@ -1,65 +1,42 @@
 # Overview
 
-Describe the intended usage of this charm and anything unique about how this
-charm relates to others here.
-
-This README will be displayed in the Charm Store, it should be either Markdown
-or RST. Ideal READMEs include instructions on how to use the charm, expected
-usage, and charm features that your audience might be interested in. For an
-example of a well written README check out Hadoop:
-http://jujucharms.com/charms/precise/hadoop
-
-Use this as a Markdown reference if you need help with the formatting of this
-README: http://askubuntu.com/editing-help
-
-This charm provides [service][]. Add a description here of what the service
-itself actually does.
-
-Also remember to check the [icon guidelines][] so that your charm looks good
-in the Juju GUI.
+This charm provides [Plex Media Server][plex]
 
 # Usage
 
-Step by step instructions on using the charm:
+To deploy:
 
-juju deploy servicename
+    juju deploy plex
 
-and so on. If you're providing a web service or something that the end user
-needs to go to, tell them here, especially if you're deploying a service that
-might listen to a non-default port.
-
-You can then browse to http://ip-address to configure the service.
+You can then browse to http://ip-address:32400/web to configure the plex server.
 
 ## Scale out Usage
 
-If the charm has any recommendations for running at scale, outline them in
-examples here. For example if you have a memcached relation that improves
-performance, mention it here.
+This charm does not adderss multi-server configurations at this time.
 
 ## Known Limitations and Issues
 
-This not only helps users but gives people a place to start if they want to help
-you add features to your charm.
+This only currently installs plex, in the future it can be expanded to 
+ * select latest release on install 
+ * upgrade versions after install
+ * relate to media providers to trigger automatic library scans
+ * change default port configuration
 
 # Configuration
 
-The configuration options will be listed on the charm store, however If you're
-making assumptions or opinionated decisions in the charm (like setting a default
-administrator password), you should detail that here so the user knows how to
-change it immediately, etc.
+Note the configuration option "download-url" was set during initial charm creation. New versions or plex pass versions may be available. Plex does not maintain a repository for automatic updates. This option should be set to the latest release while deploying to get the latest version.
+
+Addational optoins are provided to configure the host:
+ * hostname: Set the hostname which plex identifies the server by
+ * interface & address: Set a MAC address, usefull for static DHCP and firewall holes required for configuring plex. 
 
 # Contact Information
 
-Though this will be listed in the charm store itself don't assume a user will
-know that, so include that information here:
-
 ## Upstream Project Name
 
-  - Upstream website
-  - Upstream bug tracker
-  - Upstream mailing list or contact information
-  - Feel free to add things if it's useful for users
+  - https://github.com/chris-sanders/layer-plex
+  - https://github.com/chris-sanders/layer-plex/issues
+  - email: sanders.chris@gmail.com
 
 
-[service]: http://example.com
-[icon guidelines]: https://jujucharms.com/docs/stable/authors-charm-icon
+[plex]: http://plex.tv

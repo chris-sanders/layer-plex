@@ -7,12 +7,4 @@ options:
     type: int
     default: 1
     description: "Number of .deb packages to keep locally, set to 0 for none"
-#  boolean-option:
-#    type: boolean
-#    default: False
-#    description: "A short description of the configuration option"
-#  int-option:
-#    type: int
-#    default: 9001
-#    description: "A short description of the configuration option"
 

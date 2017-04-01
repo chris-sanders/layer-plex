@@ -1,21 +1,11 @@
 name: plex
 summary: Install plex media server
-maintainer: Chris <Chris@chris-XPS-15-9550>
+maintainer: Chris Sanders <sanders.chris@gmail.com>
 description: |
   Installs the plex media center on ubuntu
 tags:
-  # Replace "misc" with one or more whitelisted tags from this list:
-  # https://jujucharms.com/docs/stable/authors-charm-metadata
+  - streaming
   - misc
 subordinate: false
 series:
   - xenial
-#provides:
-#  provides-relation:
-#    interface: interface-name
-#requires:
-#  requires-relation:
-#    interface: interface-name
-#peers:
-#  peer-relation:
-#    interface: interface-name
