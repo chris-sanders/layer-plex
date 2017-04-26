@@ -18,7 +18,11 @@ def install_plex():
       pass
 
   # Parse the filename from the URL
-  filename = config['download-url'].split('/')[-1]
+  if config['download-url'] != '':
+    filename = config['download-url'].split('/')[-1]
+  else:
+    config['download-url']="https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu"
+    filename = "plex.deb"
   
   # Download the deb
   fullpath = os.path.join(filepath,filename)
@@ -45,7 +49,3 @@ def install_plex():
 def url_updated():
   install_plex()
 
-@when('plex.installed')
-@when_not('layer-mac.installed')
-def change_mac():
-    set_state('layer-mac.ready')

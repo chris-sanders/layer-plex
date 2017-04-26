@@ -1,7 +1,8 @@
 options:
   download-url:
     type: string
-    default: "https://downloads.plex.tv/plex-media-server/1.4.3.3433-03e4cfa35/plexmediaserver_1.4.3.3433-03e4cfa35_amd64.deb"
+    default: ""
+    #default: "https://downloads.plex.tv/plex-media-server/1.4.3.3433-03e4cfa35/plexmediaserver_1.4.3.3433-03e4cfa35_amd64.deb"
     description: "The URL to download plex from"
   keep-debs:
     type: int
