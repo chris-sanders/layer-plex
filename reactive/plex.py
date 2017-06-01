@@ -1,5 +1,5 @@
 from charms.reactive import hook, when, when_any, when_not, set_state, remove_state
-from charmhelpers.core.hookenv import status_set
+from charmhelpers.core.hookenv import status_set log
 from charmhelpers.core import hookenv 
 from charmhelpers.fetch import apt_install
 import urllib.request
@@ -28,9 +28,11 @@ def install_plex():
   fullpath = os.path.join(filepath,filename)
   if not os.path.isfile(fullpath):
     status_set('maintenance','downloading plex')
+    log('Downloading plex','INFO')
     urllib.request.urlretrieve(config['download-url'],fullpath)
 
   # Install package
+  log('Installing  plex','INFO')
   status_set('maintenance','installing plex')
   apt_install(fullpath)
 
@@ -47,5 +49,6 @@ def install_plex():
 
 @when('config.changed.download-url')
 def url_updated():
+  log('Running install for url_update','INFO')
   install_plex()
 
