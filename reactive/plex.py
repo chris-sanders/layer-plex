@@ -1,5 +1,5 @@
 from charms.reactive import hook, when, when_any, when_not, set_state, remove_state
-from charmhelpers.core.hookenv import status_set log
+from charmhelpers.core.hookenv import status_set, log
 from charmhelpers.core import hookenv 
 from charmhelpers.fetch import apt_install
 import urllib.request
