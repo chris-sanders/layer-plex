@@ -8,4 +8,11 @@ options:
     type: int
     default: 1
     description: "Number of .deb packages to keep locally, set to 0 for none"
-
+  user-name:
+    type: string
+    default: ""
+    description: "Username for plex log-in, provided via relation to other services if set"
+  passwd:
+    type: string
+    default: ""
+    description: "Password for plex log-in, provided via relation to other services if set"

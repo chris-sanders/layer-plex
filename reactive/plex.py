@@ -1,10 +1,10 @@
-from charms.reactive import hook, when, when_any, when_not, set_state, remove_state
+from charms.reactive import hook, when, when_all, when_any, when_not, set_state, remove_state
 from charmhelpers.core.hookenv import status_set, log
 from charmhelpers.core import hookenv 
 from charmhelpers.fetch import apt_install
 import urllib.request
 import os
-
+import socket
 
 @when_not('plex.installed')
 def install_plex():
@@ -18,7 +18,8 @@ def install_plex():
       pass
 
   # Parse the filename from the URL
-  if config['download-url'] != '':
+  if config['download-url'] != '' and \
+     config['download-url'] != "https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu":
     filename = config['download-url'].split('/')[-1]
   else:
     config['download-url']="https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu"
@@ -47,8 +48,20 @@ def install_plex():
   set_state('plex.installed')
   status_set('active','')
 
-@when('config.changed.download-url')
-def url_updated():
-  log('Running install for url_update','INFO')
-  install_plex()
+#TODO: Debug why this triggers constantly not just on config change of download-url (am I resetting it above?)
+#@when('config.changed.download-url')
+#def url_updated():
+#  log('Running install for url_update','INFO')
+#  install_plex()
 
+@when_all('plex.installed','plex-info.available','plex-info.triggered')
+@when_not('plex-info.configured')
+def configure_interface(plexinfo,*args):
+  log('Configuring interface','INFO')
+  config = hookenv.config()
+  info = {'hostname':socket.gethostname(),
+          'port':32400,
+          'user':config['user-name'],
+          'passwd':config['passwd']
+         }
+  plexinfo.configure(**info)

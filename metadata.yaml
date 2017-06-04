@@ -9,3 +9,6 @@ tags:
 subordinate: false
 series:
   - xenial
+provides:
+  plex-info:
+    interface: plex-info
