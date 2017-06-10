@@ -6,7 +6,7 @@ options:
   keep-debs:
     type: int
     default: 1
-    description: "Number of .deb packages to keep locally, set to 0 for none"
+    description: "Number of .deb packages to keep locally, Note have at least 1 deb is recommended for updates."
   user-name:
     type: string
     default: ""
