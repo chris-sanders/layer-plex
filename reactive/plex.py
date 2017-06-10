@@ -18,19 +18,28 @@ def install_plex():
       pass
 
   # Parse the filename from the URL
-  if config['download-url'] != '' and \
-     config['download-url'] != "https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu":
-    filename = config['download-url'].split('/')[-1]
-  else:
-    config['download-url']="https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu"
-    filename = "plex.deb"
+  download_url = config['download-url']
+  log('download_url: {}'.format(download_url),'WARNING')
+  if config['plex-pass-token']:
+    download_url = download_url+'&X-Plex-Token={}'.format(config['plex-pass-token'])
+    log('Pass download_url: {}'.format(download_url),'WARNING')
+  urlobject = urllib.request.urlopen(download_url)
+  filename = urlobject.geturl().split('/')[-1]
+  log('url: {}'.format(urlobject.geturl()),'WARNING')
+  log('filename: {}'.format(filename),'WARNING')
+  #if config['download-url'] != '' and \
+  #   config['download-url'] != "https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu":
+  #  filename = config['download-url'].split('/')[-1]
+  #else:
+  #  config['download-url']="https://plex.tv/downloads/latest/1?build=linux-ubuntu-x86_64&distro=ubuntu"
+  #  filename = "plex.deb"
   
   # Download the deb
   fullpath = os.path.join(filepath,filename)
   if not os.path.isfile(fullpath):
     status_set('maintenance','downloading plex')
     log('Downloading plex','INFO')
-    urllib.request.urlretrieve(config['download-url'],fullpath)
+    urllib.request.urlretrieve(download_url,fullpath)
 
   # Install package
   log('Installing  plex','INFO')
