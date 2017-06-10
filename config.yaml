@@ -19,3 +19,7 @@ options:
     type: string
     default: ""
     description: "A token to download plex-pass releases"
+  update-cron:
+    type: string
+    default: "@daily"
+    description: "Interval to check for plex updates, takes a cron compatible string"
