@@ -20,14 +20,14 @@ def install_plex():
     
     # Parse the filename from the URL
     download_url = config['download-url']
-    log('download_url: {}'.format(download_url),'DEBUG')
+    #log('download_url: {}'.format(download_url),'DEBUG')
     if config['plex-pass-token']:
         download_url = download_url+'&X-Plex-Token={}'.format(config['plex-pass-token'])
-        log('Pass download_url: {}'.format(download_url),'DEBUG')
+        #log('Pass download_url: {}'.format(download_url),'DEBUG')
     urlobject = urllib.request.urlopen(download_url)
     filename = urlobject.geturl().split('/')[-1]
-    log('Download url: {}'.format(urlobject.geturl()),'DEBUG')
-    log('file to download: {}'.format(filename),'INFO')
+    #log('Download url: {}'.format(urlobject.geturl()),'DEBUG')
+    log('File available for download: {}'.format(filename),'INFO')
     
     # Download the deb
     fullpath = os.path.join(filepath,filename)
@@ -40,7 +40,7 @@ def install_plex():
     log('Installing  plex','INFO')
     status_set('maintenance','installing plex')
     apt_install(fullpath)
-    hookenv.log("Plex package installed","INFO") 
+    hookenv.log("Plex installation complete","INFO") 
 
     # Clean up debs
     mtime = lambda f: os.stat(os.path.join(filepath,f)).st_mtime
@@ -68,10 +68,22 @@ def setup_update_cron():
     set_state('cron.installed')
 
 #TODO: Debug why this triggers constantly not just on config change of download-url (am I resetting it above?)
+#TODO: Is this needed at all with the new install/update method?
 #@when('config.changed.download-url')
 #def url_updated():
 #  log('Running install for url_update','INFO')
 #  install_plex()
+
+@when('config.changed.update-cron')
+@when('cron.installed')
+def update_cron():
+    config = hookenv.config()
+    cron = CronTab(user='root')
+    job = next(cron.find_comment("Plex update"))
+    job.clear()
+    job.setall(config['update-cron'])
+    cron.write()
+    hookenv.log("Cron updated for: {}".format(config['update-cron']))
 
 @when_all('plex.installed','plex-info.available','plex-info.triggered')
 @when_not('plex-info.configured')
