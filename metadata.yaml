@@ -9,6 +9,15 @@ tags:
 subordinate: false
 series:
   - xenial
+resources:
+  plexdb:
+    type: file
+    filename: plexdb.tgz
+    description: "Tar file of database to restore on install"
+  plexconfig:
+    type: file
+    filename: plexconfig.tgz
+    description: "Tar file of configuration folder to restore on install"
 provides:
   plex-info:
     interface: plex-info

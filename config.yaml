@@ -23,3 +23,11 @@ options:
     type: string
     default: "@daily"
     description: "Interval to check for plex updates, takes a cron compatible string"
+  restore-db:
+    type: boolean
+    default: False
+    description: "Restore a databse from previous install"
+  restore-config:
+    type: boolean
+    default: False
+    description: "Restore a configureation from previous install"

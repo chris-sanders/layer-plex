@@ -1,11 +1,14 @@
 from charms.reactive import hook, when, when_all, when_any, when_not, set_state, remove_state
 from charmhelpers.core.hookenv import status_set, log
 from charmhelpers.core import hookenv 
+from charmhelpers.core import host
 from charmhelpers.fetch import apt_install
 from crontab import CronTab
+from glob import glob
 import urllib.request
 import os
 import socket
+import tarfile
 
 @when_not('plex.installed')
 def install_plex():
@@ -20,13 +23,10 @@ def install_plex():
     
     # Parse the filename from the URL
     download_url = config['download-url']
-    #log('download_url: {}'.format(download_url),'DEBUG')
     if config['plex-pass-token']:
         download_url = download_url+'&X-Plex-Token={}'.format(config['plex-pass-token'])
-        #log('Pass download_url: {}'.format(download_url),'DEBUG')
     urlobject = urllib.request.urlopen(download_url)
     filename = urlobject.geturl().split('/')[-1]
-    #log('Download url: {}'.format(urlobject.geturl()),'DEBUG')
     log('File available for download: {}'.format(filename),'INFO')
     
     # Download the deb
@@ -52,6 +52,57 @@ def install_plex():
     hookenv.open_port(32400,'TCP')
     set_state('plex.installed')
     status_set('active','')
+
+@when('plex.installed')
+@when_not('plex.configured')
+def configure_plex():
+    config = hookenv.config()
+    backups = './backups'
+    host.service_stop('plexmediaserver.service')
+    try:
+        os.mkdir(backups)
+    except OSError as e:
+        if e.errno is 17:
+          pass
+    if config['restore-config']:
+        hookenv.log('Restoring plex config','INFO')
+        status_set('maintenance','restoring config')
+        backup_file = hookenv.resource_get('plex-config')
+        # TODO: Implement full restore
+        log('Full config restore not yet implemented in charm','ERROR')
+    elif config['restore-db']:
+        hookenv.log('Restoring plex db','INFO')
+        status_set('maintenance','restoring db')
+        backup_file = hookenv.resource_get('plexdb')
+        if backup_file:
+            plugin_folder = '/var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases'
+            # Need to clear the plugin folder
+            for each_file in os.listdir(plugin_folder):
+                file_path = os.path.join(plugin_folder,each_file)
+                if os.path.isfile(file_path):
+                    os.unlink(file_path)
+            # Restore database file
+            with tarfile.open(backup_file,'r:gz') as inFile:
+                inFile.extractall(plugin_folder)
+            # Rename to remove a date if it exists
+            for file_name in glob(plugin_folder+'/com.plexapp.plugins.library.db*'):
+                os.rename(file_name,plugin_folder+'/com.plexapp.plugins.library.db')
+            host.chownr(plugin_folder,owner='plex',group='plex')
+        else:
+            hookenv.log("Add plex-db resource, see juju attach or disable restore-db",'ERROR')
+            status_set('blocked','Waiting on couchconfig resource')
+            return
+    else:
+        pass
+        #cp.start()
+        #while not Path(cp.settings_file).is_file():
+        #    time.sleep(1)
+        #cp.stop()
+        #cp.reload_config()
+    host.service_start('plexmediaserver.service')
+    status_set('active','')
+    set_state('plex.configured')
+ 
 
 @when('plex.installed')
 @when_not('cron.installed')
@@ -85,7 +136,7 @@ def update_cron():
     cron.write()
     hookenv.log("Cron updated for: {}".format(config['update-cron']))
 
-@when_all('plex.installed','plex-info.available','plex-info.triggered')
+@when_all('plex.configured','plex-info.available','plex-info.triggered')
 @when_not('plex-info.configured')
 def configure_interface(plexinfo,*args):
     log('Configuring interface','INFO')
