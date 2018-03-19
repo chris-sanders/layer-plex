@@ -1,3 +1,6 @@
 includes: ['layer:basic','layer:hostname','layer:version','interface:plex-info']  # if you use any interfaces, add them here
+options:
+  basic:
+    packages: ['python3-setuptools-scm']  # Work around pip 8.1.2 requirement
 repo: git@github.com:chris-sanders/layer-plex.git
 
