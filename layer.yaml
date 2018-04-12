@@ -1,6 +1,9 @@
-includes: ['layer:basic','layer:hostname','layer:version','interface:plex-info']  # if you use any interfaces, add them here
+includes: ['layer:basic','layer:hostname','layer:version','layer:backup','interface:plex-info']  # if you use any interfaces, add them here
+repo: git@github.com:chris-sanders/layer-plex.git
 options:
   basic:
     packages: ['python3-setuptools-scm']  # Work around pip 8.1.2 requirement
-repo: git@github.com:chris-sanders/layer-plex.git
-
+  backup:
+    backup-name: "plex"
+    backup-files: >-
+      /var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases
