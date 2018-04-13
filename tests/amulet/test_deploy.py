@@ -9,6 +9,8 @@ import requests
 def deploy():
     deploy = amulet.Deployment(series='xenial')
     deploy.add('plex')
+    deploy.configure('plex', {'backup-count': 1,
+                              'backup-location': '/tmp/plex'})
     deploy.setup(timeout=1000)
     return deploy
 
@@ -27,12 +29,18 @@ class TestPlex():
             raise
 
     def test_web_frontend(self, deploy, plex):
-        page = requests.get('http://{}:{}'.format(plex.info['public-address'], 32400))
+        page = requests.get('http://{}:{}/web'.format(plex.info['public-address'], 32400))
         assert page.status_code == 200
         print(page)
 
-    def test_action_update(self, deploy, unit):
-        uuid = unit.run_action('renew-upnp')
+    def test_action_update(self, deploy, plex):
+        uuid = plex.run_action('update')
+        action_output = deploy.get_action_output(uuid, full_output=True)
+        print(action_output)
+        assert action_output['status'] == 'completed'
+
+    def test_action_backup(self, deploy, plex):
+        uuid = plex.run_action('update')
         action_output = deploy.get_action_output(uuid, full_output=True)
         print(action_output)
         assert action_output['status'] == 'completed'

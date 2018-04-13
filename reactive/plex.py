@@ -44,8 +44,8 @@ def install_plex():
     hookenv.log("Plex installation complete", "INFO")
 
     # Clean up debs
-    mtime = lambda f: os.stat(os.path.join(filepath, f)).st_mtime
-    sortedFiles = sorted(os.listdir(filepath), key=mtime)
+    sortedFiles = sorted(os.listdir(filepath),
+                         key=lambda f: os.stat(os.path.join(filepath, f)).st_mtime)
     deleteCount = max(len(sortedFiles) - config['keep-debs'], 0)
     for file in sortedFiles[0:deleteCount]:
         os.remove(os.path.join(filepath, file))
@@ -66,13 +66,13 @@ def configure_plex():
     except OSError as e:
         if e.errno is 17:
             pass
-    if config['restore-config']:
-        hookenv.log('Restoring plex config', 'INFO')
-        status_set('maintenance', 'restoring config')
-        backup_file = hookenv.resource_get('plex-config')
-        # TODO: Implement full restore
-        log('Full config restore not yet implemented in charm', 'ERROR')
-    elif config['restore-db']:
+    # if config['restore-config']:
+    #     hookenv.log('Restoring plex config', 'INFO')
+    #     status_set('maintenance', 'restoring config')
+    #     backup_file = hookenv.resource_get('plex-config')
+    #     # TODO: Implement full restore
+    #     log('Full config restore not yet implemented in charm', 'ERROR')
+    if config['restore-db']:
         hookenv.log('Restoring plex db', 'INFO')
         status_set('maintenance', 'restoring db')
         backup_file = hookenv.resource_get('plexdb')

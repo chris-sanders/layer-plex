@@ -27,7 +27,3 @@ options:
     type: boolean
     default: False
     description: "Restore a databse from previous install"
-  restore-config:
-    type: boolean
-    default: False
-    description: "Restore a configureation from previous install"
