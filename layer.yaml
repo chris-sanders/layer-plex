@@ -5,5 +5,5 @@ options:
     packages: ['python3-setuptools-scm']  # Work around pip 8.1.2 requirement
   backup:
     backup-name: "plex"
-    backup-files: >-
+    backup-files: |-
       /var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases

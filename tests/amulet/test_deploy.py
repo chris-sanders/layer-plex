@@ -40,7 +40,7 @@ class TestPlex():
         assert action_output['status'] == 'completed'
 
     def test_action_backup(self, deploy, plex):
-        uuid = plex.run_action('update')
+        uuid = plex.run_action('backup')
         action_output = deploy.get_action_output(uuid, full_output=True)
         print(action_output)
         assert action_output['status'] == 'completed'
