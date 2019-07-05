@@ -11,6 +11,7 @@ import socket
 import tarfile
 
 
+@when('layer-service-account.configured')
 @when_not('plex.installed')
 def install_plex():
     # Create directory for debs

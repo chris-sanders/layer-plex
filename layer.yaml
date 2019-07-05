@@ -1,4 +1,10 @@
-includes: ['layer:basic','layer:hostname','layer:version','layer:backup','interface:plex-info']  # if you use any interfaces, add them here
+includes: 
+  - 'layer:basic'
+  - 'layer:hostname'
+  - 'layer:version'
+  - 'layer:backup'
+  - 'layer:service-account'
+  - 'interface:plex-info'
 repo: git@github.com:chris-sanders/layer-plex.git
 options:
   basic:
@@ -7,3 +13,10 @@ options:
     backup-name: "plex"
     backup-files: |-
       /var/lib/plexmediaserver/Library/Application Support/Plex Media Server/Plug-in Support/Databases
+  service-account:
+    users:
+      - 'plex'
+    groups:
+      - 'plex'
+    membership:
+      - 'plex': ['plex']
